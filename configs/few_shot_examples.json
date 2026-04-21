@@ -1,0 +1,26 @@
+[
+  {
+    "input": "This Agreement shall be governed by and construed in accordance with the laws of the State of Delaware, without regard to its conflict of laws principles. Each party's total liability under this Agreement shall not exceed the total fees paid in the twelve months preceding the claim.",
+    "output": {
+      "clauses": [
+        {"type": "Governing Law", "span": "This Agreement shall be governed by and construed in accordance with the laws of the State of Delaware, without regard to its conflict of laws principles."},
+        {"type": "Liability Cap", "span": "Each party's total liability under this Agreement shall not exceed the total fees paid in the twelve months preceding the claim."}
+      ]
+    }
+  },
+  {
+    "input": "Each party shall maintain the confidentiality of the other party's Confidential Information and shall not disclose it to any third party without prior written consent. All intellectual property created by Contractor in the performance of this Agreement shall be the sole and exclusive property of the Company.",
+    "output": {
+      "clauses": [
+        {"type": "Confidentiality", "span": "Each party shall maintain the confidentiality of the other party's Confidential Information and shall not disclose it to any third party without prior written consent."},
+        {"type": "IP Assignment", "span": "All intellectual property created by Contractor in the performance of this Agreement shall be the sole and exclusive property of the Company."}
+      ]
+    }
+  },
+  {
+    "input": "The initial term of this Agreement is twelve (12) months. No automatic renewal shall apply and any extension requires mutual written consent. This section sets forth the payment schedule and invoicing terms between the parties.",
+    "output": {
+      "clauses": []
+    }
+  }
+]
