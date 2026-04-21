@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from enum import Enum
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class ClauseType(str, Enum):
@@ -19,12 +19,16 @@ class ClauseType(str, Enum):
 
 
 class Clause(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     type: ClauseType
     span: str = Field(min_length=1)
 
 
 class ClauseList(BaseModel):
-    clauses: list[Clause] = Field(default_factory=list)
+    model_config = ConfigDict(extra="forbid")
+
+    clauses: list[Clause]
 
 
 class ExtractRequest(BaseModel):
