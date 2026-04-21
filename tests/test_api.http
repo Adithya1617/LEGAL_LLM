@@ -1,0 +1,30 @@
+### Health
+GET http://localhost:8000/healthz
+
+### Version
+GET http://localhost:8000/version
+
+### Extract (small example)
+POST http://localhost:8000/extract
+Content-Type: application/json
+
+{
+  "text": "This Agreement shall be governed by the laws of the State of Delaware. Each party's total liability shall not exceed the fees paid in the prior twelve months."
+}
+
+### Extract with filtered clause types
+POST http://localhost:8000/extract
+Content-Type: application/json
+
+{
+  "text": "Confidential Information shall not be disclosed.",
+  "clause_types": ["Confidentiality"]
+}
+
+### Extract — empty text (should 422)
+POST http://localhost:8000/extract
+Content-Type: application/json
+
+{
+  "text": ""
+}

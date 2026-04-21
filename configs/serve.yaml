@@ -1,0 +1,15 @@
+model:
+  path: models/merged
+  max_new_tokens: 512
+  timeout_seconds: 30
+
+chunking:
+  chunk_tokens: 1500
+  overlap_tokens: 200
+
+server:
+  host: 0.0.0.0
+  port: 8000
+  cors_origins:
+    - http://localhost:7860
+    - http://demo:7860
