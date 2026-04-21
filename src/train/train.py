@@ -114,7 +114,12 @@ def main() -> None:
         eval_dataset=val_ds,
         args=sft_cfg,
     )
-    trainer.train()
+    # Auto-resume if any checkpoint exists in output_dir; first run just starts fresh.
+    ckpt_dir = Path(cfg["training"]["output_dir"])
+    has_ckpt = ckpt_dir.exists() and any(
+        p.name.startswith("checkpoint-") for p in ckpt_dir.iterdir()
+    )
+    trainer.train(resume_from_checkpoint=has_ckpt or None)
 
     best_dir = Path(cfg["training"]["output_dir"]) / "best"
     trainer.save_model(str(best_dir))
