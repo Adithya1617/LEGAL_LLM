@@ -17,7 +17,8 @@ def test_clause_type_has_exactly_ten_members():
 def test_clause_type_contains_expected_values():
     values = {c.value for c in ClauseType}
     assert "Governing Law" in values
-    assert "Indemnification" in values
+    assert "Anti-Assignment" in values
+    assert "Audit Rights" in values
     assert "Auto-Renewal" in values
 
 

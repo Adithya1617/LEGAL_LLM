@@ -7,13 +7,13 @@ from pydantic import BaseModel, ConfigDict, Field
 
 class ClauseType(str, Enum):
     GOVERNING_LAW = "Governing Law"
-    INDEMNIFICATION = "Indemnification"
+    ANTI_ASSIGNMENT = "Anti-Assignment"
     NON_COMPETE = "Non-Compete"
     TERMINATION_FOR_CONVENIENCE = "Termination for Convenience"
     LIABILITY_CAP = "Liability Cap"
     EXCLUSIVITY = "Exclusivity"
     IP_ASSIGNMENT = "IP Assignment"
-    CONFIDENTIALITY = "Confidentiality"
+    AUDIT_RIGHTS = "Audit Rights"
     CHANGE_OF_CONTROL = "Change of Control"
     AUTO_RENEWAL = "Auto-Renewal"
 

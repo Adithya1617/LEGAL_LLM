@@ -35,14 +35,13 @@ CUAD_CACHE_DIR = Path.home() / ".cache" / "cuad"
 # (Task 7) dumps exact CUAD category strings and may refine this mapping.
 CUAD_TO_CLAUSE_TYPE: dict[str, ClauseType] = {
     "Governing Law": ClauseType.GOVERNING_LAW,
-    "Indemnification": ClauseType.INDEMNIFICATION,
+    "Anti-Assignment": ClauseType.ANTI_ASSIGNMENT,
     "Non-Compete": ClauseType.NON_COMPETE,
     "Termination For Convenience": ClauseType.TERMINATION_FOR_CONVENIENCE,
     "Cap On Liability": ClauseType.LIABILITY_CAP,
     "Exclusivity": ClauseType.EXCLUSIVITY,
     "Ip Ownership Assignment": ClauseType.IP_ASSIGNMENT,
-    # Confidentiality: placeholder — refine in notebook if CUAD uses a different label
-    "Non-Disparagement": ClauseType.CONFIDENTIALITY,
+    "Audit Rights": ClauseType.AUDIT_RIGHTS,
     "Change Of Control": ClauseType.CHANGE_OF_CONTROL,
     "Renewal Term": ClauseType.AUTO_RENEWAL,
 }

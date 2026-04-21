@@ -14,10 +14,10 @@ def test_build_instruction_lists_all_clause_types():
 
 
 def test_build_instruction_accepts_subset():
-    types = [ClauseType.GOVERNING_LAW, ClauseType.INDEMNIFICATION]
+    types = [ClauseType.GOVERNING_LAW, ClauseType.ANTI_ASSIGNMENT]
     instr = build_instruction(types)
     assert "Governing Law" in instr
-    assert "Indemnification" in instr
+    assert "Anti-Assignment" in instr
     assert "Non-Compete" not in instr
 
 
