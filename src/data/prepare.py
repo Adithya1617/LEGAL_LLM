@@ -15,14 +15,19 @@ from __future__ import annotations
 import argparse
 import json
 import random
+import urllib.request
+import zipfile
+from io import BytesIO
 from pathlib import Path
 
-from datasets import load_dataset
 from transformers import AutoTokenizer
 
 from src.common.chunking import chunk_text
 from src.common.prompts import build_instruction
 from src.common.schemas import ClauseList, ClauseType
+
+CUAD_ZIP_URL = "https://zenodo.org/records/4595826/files/CUAD_v1.zip"
+CUAD_CACHE_DIR = Path.home() / ".cache" / "cuad"
 
 # --- Mapping from CUAD question labels to our 10 clause types ----------------
 # CUAD question labels are long and specific. We canonicalize to ClauseType.
@@ -83,35 +88,55 @@ def _load_tokenizer():
         return AutoTokenizer.from_pretrained(FALLBACK_MODEL_NAME)
 
 
+def _download_cuad_json() -> dict:
+    """Download CUAD_v1.json from Zenodo (cached) and return parsed contents."""
+    CUAD_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    json_path = CUAD_CACHE_DIR / "CUAD_v1.json"
+    if not json_path.exists():
+        print(f"Downloading CUAD_v1.zip from {CUAD_ZIP_URL} ...")
+        with urllib.request.urlopen(CUAD_ZIP_URL) as resp:
+            zip_bytes = resp.read()
+        with zipfile.ZipFile(BytesIO(zip_bytes)) as zf:
+            json_members = [n for n in zf.namelist() if n.endswith("CUAD_v1.json")]
+            if not json_members:
+                raise RuntimeError("CUAD_v1.json not found in downloaded zip")
+            with zf.open(json_members[0]) as jf:
+                json_path.write_bytes(jf.read())
+        print(f"Cached CUAD_v1.json to {json_path}")
+    return json.loads(json_path.read_text())
+
+
 def _cuad_to_contracts() -> dict[str, dict]:
-    """
-    Load CUAD-v1 and regroup by contract.
+    """Load CUAD-v1 JSON (SQuAD-format) and regroup by contract.
 
     Returns: {"gold": {contract_id: [{type, span, start_char, end_char}, ...]},
               "text": {contract_id: full_text}}
     """
-    ds = load_dataset("theatticusproject/cuad-qa", split="train")
+    raw = _download_cuad_json()
     gold_by_contract: dict[str, list[dict]] = {}
     text_by_contract: dict[str, str] = {}
-    for row in ds:
-        cid = row["id"].split("_")[0]
-        text_by_contract[cid] = row["context"]
-        category = row["question"].split('"')[1] if '"' in row["question"] else row["question"]
-        ctype = CUAD_TO_CLAUSE_TYPE.get(category)
-        if ctype is None:
-            continue
-        gold_by_contract.setdefault(cid, [])
-        for start, text in zip(
-            row["answers"]["answer_start"], row["answers"]["text"], strict=False
-        ):
-            gold_by_contract[cid].append(
-                {
-                    "type": ctype,
-                    "span": text,
-                    "start_char": start,
-                    "end_char": start + len(text),
-                }
-            )
+    for doc in raw["data"]:
+        cid = doc["title"]
+        for para in doc["paragraphs"]:
+            text_by_contract[cid] = para["context"]
+            for qa in para["qas"]:
+                q = qa["question"]
+                category = q.split('"')[1] if '"' in q else q
+                ctype = CUAD_TO_CLAUSE_TYPE.get(category)
+                if ctype is None:
+                    continue
+                gold_by_contract.setdefault(cid, [])
+                for answer in qa.get("answers", []):
+                    start = answer["answer_start"]
+                    text = answer["text"]
+                    gold_by_contract[cid].append(
+                        {
+                            "type": ctype,
+                            "span": text,
+                            "start_char": start,
+                            "end_char": start + len(text),
+                        }
+                    )
     return {"gold": gold_by_contract, "text": text_by_contract}
 
 
