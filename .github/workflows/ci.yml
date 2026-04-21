@@ -1,0 +1,43 @@
+name: CI
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-dev.txt
+      - run: ruff check src/ tests/
+      - run: ruff format --check src/ tests/
+      - run: pip install pydantic fastapi httpx structlog pyyaml
+      - run: mypy src/common src/serve
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: |
+          pip install -r requirements-dev.txt
+          pip install pydantic==2.9.2 fastapi==0.115.0 httpx==0.27.2 \
+            structlog==24.4.0 pyyaml==6.0.2 transformers==4.45.2
+      - run: |
+          pytest tests/test_schemas.py tests/test_metrics.py \
+                 tests/test_validate.py tests/test_api.py tests/test_prompts.py -v
+
+  docker-build-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Build builder stage only (skip HF-gated model fetch)
+        run: |
+          docker build -f docker/Dockerfile --target builder -t legal-llm:builder .

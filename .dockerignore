@@ -1,0 +1,17 @@
+.git/
+.venv/
+venv/
+data/
+models/checkpoints/
+wandb/
+outputs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+__pycache__/
+*.pyc
+notebooks/
+docs/
+.github/
+tests/
+.remember/
