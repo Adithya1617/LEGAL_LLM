@@ -20,7 +20,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--adapter", type=Path, required=True)
     ap.add_argument("--out", type=Path, required=True)
-    ap.add_argument("--base", default="meta-llama/Llama-3.2-3B-Instruct")
+    ap.add_argument("--base", default="unsloth/Llama-3.2-3B-Instruct")
     args = ap.parse_args()
 
     print(f"Loading base: {args.base}")

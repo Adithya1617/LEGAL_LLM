@@ -19,7 +19,7 @@ from src.common.chunking import chunk_text
 from src.common.schemas import Clause, ClauseType
 
 API_URL = os.environ.get("API_URL", "http://localhost:8000")
-TOKENIZER_NAME = os.environ.get("TOKENIZER_NAME", "meta-llama/Llama-3.2-3B-Instruct")
+TOKENIZER_NAME = os.environ.get("TOKENIZER_NAME", "unsloth/Llama-3.2-3B-Instruct")
 
 try:
     _tok = AutoTokenizer.from_pretrained(TOKENIZER_NAME)

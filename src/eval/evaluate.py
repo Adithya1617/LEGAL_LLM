@@ -102,9 +102,9 @@ def main() -> None:
     if args.provider == "ft":
         prov = LocalHFProvider(name="ft", model_path="models/merged")
     elif args.provider == "base-zs":
-        prov = LocalHFProvider(name="base-zs", model_path="meta-llama/Llama-3.2-3B-Instruct")
+        prov = LocalHFProvider(name="base-zs", model_path="unsloth/Llama-3.2-3B-Instruct")
     elif args.provider == "base-fs":
-        prov = LocalHFProvider(name="base-fs", model_path="meta-llama/Llama-3.2-3B-Instruct")
+        prov = LocalHFProvider(name="base-fs", model_path="unsloth/Llama-3.2-3B-Instruct")
         few_shot = True
     else:
         prov = OpenAIProvider(name="gpt-4o-mini")

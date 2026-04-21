@@ -2,18 +2,14 @@ from transformers import AutoTokenizer
 
 from src.common.chunking import chunk_text
 
-TOKENIZER_NAME = "meta-llama/Llama-3.2-3B-Instruct"
+TOKENIZER_NAME = "unsloth/Llama-3.2-3B-Instruct"
 
 
 def _tok():
-    # gated model — fall back to a public tokenizer with same BPE family if needed
     try:
         return AutoTokenizer.from_pretrained(TOKENIZER_NAME)
     except Exception:
-        try:
-            return AutoTokenizer.from_pretrained("NousResearch/Llama-3.2-3B")
-        except Exception:
-            return AutoTokenizer.from_pretrained("NousResearch/Meta-Llama-3.1-8B")
+        return AutoTokenizer.from_pretrained("NousResearch/Meta-Llama-3.1-8B")
 
 
 def test_chunk_short_text_returns_single_chunk():

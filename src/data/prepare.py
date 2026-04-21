@@ -46,7 +46,7 @@ CUAD_TO_CLAUSE_TYPE: dict[str, ClauseType] = {
     "Renewal Term": ClauseType.AUTO_RENEWAL,
 }
 
-MODEL_NAME = "meta-llama/Llama-3.2-3B-Instruct"
+MODEL_NAME = "unsloth/Llama-3.2-3B-Instruct"
 FALLBACK_MODEL_NAME = "NousResearch/Meta-Llama-3.1-8B"
 
 
