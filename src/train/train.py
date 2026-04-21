@@ -6,7 +6,10 @@ Loads config from YAML, uses Unsloth's FastLanguageModel for memory-efficient
 Run: `python -m src.train.train --config configs/llama32_qlora.yaml`
 """
 
-from __future__ import annotations
+# Unsloth must be imported BEFORE trl/transformers/peft for its patches to apply.
+# That requirement is why we don't use `from __future__ import annotations` here.
+from unsloth import FastLanguageModel  # noqa: I001
+from unsloth.chat_templates import get_chat_template
 
 import argparse
 from pathlib import Path
@@ -14,8 +17,6 @@ from pathlib import Path
 import yaml
 from datasets import Dataset, load_dataset
 from trl import SFTConfig, SFTTrainer
-from unsloth import FastLanguageModel
-from unsloth.chat_templates import get_chat_template
 
 
 def _load_jsonl_as_chat(path: Path, tokenizer) -> Dataset:
@@ -101,14 +102,14 @@ def main() -> None:
         seed=cfg["training"]["seed"],
         report_to=cfg["training"]["report_to"],
         run_name=cfg["training"]["run_name"],
-        max_seq_length=cfg["model"]["max_seq_length"],
+        max_length=cfg["model"]["max_seq_length"],
         dataset_text_field="text",
         packing=False,
     )
 
     trainer = SFTTrainer(
         model=model,
-        tokenizer=tokenizer,
+        processing_class=tokenizer,
         train_dataset=train_ds,
         eval_dataset=val_ds,
         args=sft_cfg,
