@@ -1,8 +1,8 @@
 .env
 .venv/
 venv/
-data/
-models/
+/data/
+/models/
 __pycache__/
 *.gguf
 *.bin
